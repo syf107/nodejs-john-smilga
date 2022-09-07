@@ -1,2 +1,9 @@
-console.log("Syarief Arifin");
-console.log("Hello bitch");
+const EventEmitter = require("events");
+
+const customEmitter = new EventEmitter();
+
+customEmitter.on("response", () => {
+  console.log(`data received.`);
+});
+
+customEmitter.emit("response");
