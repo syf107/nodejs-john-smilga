@@ -6,6 +6,7 @@ console.log("start");
 // in this, you create variables that read and store it what's within the file you intended.
 const first = readFileSync("./content/first.txt", "utf8");
 const second = readFileSync("./content/second.txt", "utf8");
+console.log(first, second);
 
 // this writeFileSync, if there isn't any files, will create the new one with the first argument as the location and name of file,
 // the second argument is the things you want to put.
