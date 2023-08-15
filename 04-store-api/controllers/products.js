@@ -9,8 +9,11 @@ const getAllProductsStatic = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   const { featured, company, name, sort, fields, numericFilters } = req.query;
+
+  // creating new object to place only the good and right value. This will be the object that assigned to .find module.
   const queryObject = {};
 
+  // basically below are the way to validate whether the value exist or not. If exist, assign it to queryObject.
   if (featured) {
     queryObject.featured = featured === "true" ? true : false;
   }
@@ -19,6 +22,7 @@ const getAllProducts = async (req, res) => {
     queryObject.company = company;
   }
 
+  // using the $regex query property to name, so it will search the value based on the character exist in the name. the $options is to check the case sensitive.
   if (name) {
     queryObject.name = { $regex: name, $options: "i" };
   }
@@ -37,6 +41,7 @@ const getAllProducts = async (req, res) => {
       regEx,
       (match) => `-${operatorMap[match]}-`
     );
+    console.log(filters);
 
     const options = ["price", "rating"];
     filters = filters.split(",").forEach((item) => {
@@ -49,17 +54,22 @@ const getAllProducts = async (req, res) => {
 
   console.log(queryObject);
 
+  // do the .find with the all Product to the queryObjects
   let result = Product.find(queryObject);
 
-  // sort
+  // if statement, if the sort value exist,
   if (sort) {
+    // split the sort variable to be array and join as the new string divided with spaces.
+    // do the sorting.
     const sortList = sort.split(",").join(" ");
     result = result.sort(sortList);
+
+    // if it doesn't just sort with createdAt property.
   } else {
     result = result.sort("createdAt");
   }
 
-  // select
+  // select which property you want to show on the api.
   if (fields) {
     const fieldsList = fields.split(",").join(" ");
     result = result.select(fieldsList);
