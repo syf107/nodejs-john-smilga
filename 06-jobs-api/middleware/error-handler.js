@@ -6,6 +6,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     msg: err.message || "Something went wrong try again later.",
   };
 
+  // validation error username password registration
   if (err.name === "ValidationError") {
     console.log(Object.values(err.errors));
     customError.msg = Object.values(err.errors)
@@ -14,6 +15,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.statusCode = 400;
   }
 
+  // error of registering similar email value within database.
   if (err.code && err.code === 11000) {
     customError.msg = `Duplicate value entered for ${Object.keys(
       err.keyValue
@@ -21,6 +23,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     customError.statusCode = 400;
   }
 
+  // the wrong digit of ID
   if (err.name === "CastError") {
     customError.msg = `No item found with id ${err.value}`;
     customError.statusCode = 404; // not found.
